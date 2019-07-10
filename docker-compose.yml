@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  api:
+    container_name: ms-api
+    build: .
+    ports:
+      - "3000"
+      - "9229"
+    environment: # Set ENV vars
+     - NODE_ENV=local
+     - ES_HOST=elasticsearch
+     - PORT=3000
+    volumes: # Attach local book data directory
+      - ./books:/usr/src/app/books
+
+  web: # Nginx Server For Frontend App
+    container_name: ms-frontend
+    image: nginx
+    volumes: # Serve local "public" dir
+      - ./public:/usr/share/nginx/html
+    ports:
+      - "8080:80" # Forward site to localhost:8080
+
+  elasticsearch: # Elasticsearch Instance
+    container_name: ms-search
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.1.1
+    volumes: # Persist ES data in seperate "esdata" volume
+      - msdata:/usr/share/elasticsearch/data
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+    ports: # Expose Elasticsearch ports
+      - "9300:9300"
+      - "9200:9200"
+
+volumes: # Define seperate volume for Elasticsearch data
+  msdata:
