@@ -1,0 +1,19 @@
+.idea
+.project
+nbproject
+.buildpath
+.settings
+.DS_Store
+*.swp
+*.swo
+.DS_Store
+vendor/*
+bin/
+
+
+# compass stuff
+config/.sass-cache/
+.sass-cache
+
+# node
+node_modules
