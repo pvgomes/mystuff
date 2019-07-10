@@ -2,7 +2,7 @@ const elasticsearch = require('elasticsearch')
 
 // Core ES variables for this project
 const index = 'library'
-const type = 'stuff'
+const type = 'mystuff'
 const port = 9200
 const host = process.env.ES_HOST || 'localhost'
 const client = new elasticsearch.Client({ host: { host, port } })
@@ -22,4 +22,28 @@ async function checkConnection () {
   }
 }
 
-checkConnection()
+/** Clear the index, recreate it, and add mappings */
+async function resetIndex () {
+  if (await client.indices.exists({ index })) {
+    await client.indices.delete({ index })
+  }
+
+  await client.indices.create({ index })
+  await putBookMapping()
+}
+
+/** Add book section schema mapping to ES */
+async function putStuffMapping () {
+  const schema = {
+    title: { type: 'keyword' },
+    author: { type: 'keyword' },
+    location: { type: 'integer' },
+    text: { type: 'text' }
+  }
+
+  return client.indices.putMapping({ index, type, body: { properties: schema } })
+}
+
+module.exports = {
+  client, index, type, checkConnection, resetIndex
+}
