@@ -11,8 +11,8 @@ services:
      - NODE_ENV=local
      - ES_HOST=elasticsearch
      - PORT=3000
-    volumes: # Attach local book data directory
-      - ./books:/usr/src/app/books
+    # volumes:
+    #   - .:/usr/src/app
 
   web: # Nginx Server For Frontend App
     container_name: ms-frontend

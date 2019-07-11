@@ -1,8 +1,8 @@
 const elasticsearch = require('elasticsearch')
 
 // Core ES variables for this project
-const index = 'library'
-const type = 'mystuff'
+const index = 'mystuff'
+const type = 'stuff'
 const port = 9200
 const host = process.env.ES_HOST || 'localhost'
 const client = new elasticsearch.Client({ host: { host, port } })
@@ -36,8 +36,8 @@ async function resetIndex () {
 async function putStuffMapping () {
   const schema = {
     title: { type: 'keyword' },
-    author: { type: 'keyword' },
-    location: { type: 'integer' },
+    place: { type: 'text' },
+    location: { type: 'text' },
     text: { type: 'text' }
   }
 
